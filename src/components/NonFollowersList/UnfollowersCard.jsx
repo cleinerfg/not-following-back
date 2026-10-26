@@ -1,7 +1,10 @@
+import { useData } from "../../context/useData";
 import UnfollowerItem from "./UnfollowerItem";
 
-export default function UnfollowersCard({ items = [] }) {
-  const hasItems = items.length > 0;
+export default function UnfollowersCard() {
+  const { stats } = useData();
+
+  const hasItems = stats.notFollowingBack.length > 0;
 
   return (
     <section className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 shadow-xl flex-1 flex flex-col">
@@ -17,7 +20,7 @@ export default function UnfollowersCard({ items = [] }) {
         </div>
       ) : (
         <ul className="divide-y divide-neutral-800 max-h-80 overflow-y-auto pr-1">
-          {items.map((username, index) => (
+          {stats.notFollowingBack.map((username, index) => (
             <UnfollowerItem key={`${username}-${index}`} username={username} />
           ))}
         </ul>
