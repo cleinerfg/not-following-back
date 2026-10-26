@@ -4,6 +4,8 @@ Aplicação web desenvolvida em **React com Vite** para identificar quais contas
 
 O projeto é totalmente **stateless**: todo o processamento dos dados ocorre de forma local no seu navegador, garantindo privacidade total, sem armazenamento ou envio de dados para servidores externos.
 
+**Acesse a ferramenta online:** [nao-me-segue-de-volta.vercel.app](https://nao-me-segue-de-volta.vercel.app/)
+
 ## Como Usar
 
 1. Acesse o **Instagram** no aplicativo ou web e vá em **Configurações e privacidade** (`Central de Contas > Suas informações e permissões > Baixar suas informações`).
