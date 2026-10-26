@@ -4,6 +4,7 @@ import {
   validateFollowersJson,
   validateFollowingJson,
 } from "../utils/jsonValidators";
+import { extractUsernames, getNotFollowingBack } from "./helpers";
 
 export default function DataProvider({ children }) {
   const [data, setData] = useState({ followers: "", following: "" });
@@ -11,19 +12,46 @@ export default function DataProvider({ children }) {
     followers: null,
     following: null,
   });
+  const [stats, setStats] = useState({
+    followers: [],
+    following: [],
+    notFollowingBack: [],
+  });
 
   const updateDataAndValidation = (type, content) => {
-    let isValidContent = null;
+    setData((prev) => ({ ...prev, [type]: content }));
 
-    if (content !== "") {
-      isValidContent =
-        type === "followers"
-          ? validateFollowersJson(content)
-          : validateFollowingJson(content);
+    if (content === "") {
+      setDataIsValid((prev) => ({ ...prev, [type]: null }));
+      setStats((prev) => ({ ...prev, notFollowingBack: [], [type]: [] }));
+      return;
     }
 
-    setData((prev) => ({ ...prev, [type]: content }));
-    setDataIsValid((prev) => ({ ...prev, [type]: isValidContent }));
+    const isValid =
+      type === "followers"
+        ? validateFollowersJson(content)
+        : validateFollowingJson(content);
+
+    setDataIsValid((prev) => ({ ...prev, [type]: isValid }));
+
+    if (isValid) {
+      const parsedData = JSON.parse(content);
+      const usernames = extractUsernames(type, parsedData);
+
+      setStats((prev) => {
+        const updatedStats = { ...prev, [type]: usernames };
+
+        const followersList = type === "followers" ? usernames : prev.followers;
+        const followingList = type === "following" ? usernames : prev.following;
+
+        updatedStats.notFollowingBack = getNotFollowingBack(
+          followingList,
+          followersList,
+        );
+
+        return updatedStats;
+      });
+    }
   };
 
   return (
@@ -32,6 +60,7 @@ export default function DataProvider({ children }) {
         data,
         dataIsValid,
         updateDataAndValidation,
+        stats,
       }}
     >
       {children}
