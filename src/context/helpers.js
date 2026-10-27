@@ -13,5 +13,7 @@ export function extractUsernames(type, parsedData) {
 
 export function getNotFollowingBack(following = [], followers = []) {
   const followersSet = new Set(followers);
-  return following.filter((username) => !followersSet.has(username));
+  return following
+    .filter((username) => !followersSet.has(username))
+    .sort((a, b) => a.localeCompare(b));
 }
